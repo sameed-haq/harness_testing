@@ -3,12 +3,10 @@ terraform {
 
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
-      version = ">= 5.0"
+      source = "hashicorp/aws"
     }
     helm = {
-      source  = "hashicorp/helm"
-      version = ">= 2.9.0"
+      source = "hashicorp/helm"
     }
   }
 }
@@ -72,10 +70,34 @@ module "eks" {
   }
 }
 
+resource "null_resource" "wait_for_nodes" {
+  depends_on = [module.eks]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "Waiting for EKS nodes to become Ready..."
+      for i in {1..30}; do
+        READY=$(kubectl get nodes --no-headers | grep -c ' Ready')
+        if [ "$READY" -ge 1 ]; then
+          echo "EKS nodes are Ready."
+          exit 0
+        fi
+        echo "Waiting... attempt $i"
+        sleep 20
+      done
+      echo "Nodes did not become ready in time."
+      exit 1
+    EOT
+  }
+}
+
+
 # Install Harness Delegate via Terraform module (Helm under the hood)
 module "delegate" {
   source  = "harness/harness-delegate/kubernetes"
   version = "0.1.8"
+
+  depends_on = [null_resource.wait_for_nodes]
 
   account_id       = var.account_id
   delegate_token   = var.delegate_token
@@ -90,19 +112,4 @@ module "delegate" {
   values = yamlencode({
     javaOpts = "-Xms64M"
   })
-}
-
-output "cluster_name" {
-  description = "EKS cluster name"
-  value       = module.eks.cluster_name
-}
-
-output "cluster_endpoint" {
-  description = "EKS API server endpoint"
-  value       = module.eks.cluster_endpoint
-}
-
-output "cluster_ca_certificate" {
-  description = "EKS cluster CA certificate"
-  value       = module.eks.cluster_certificate_authority_data
 }
