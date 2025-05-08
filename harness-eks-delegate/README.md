@@ -21,8 +21,9 @@ This Terraform example provisions an AWS EKS cluster and installs a Harness Kube
 2. Create a terraform.tfvars file:
 
     ```bash
-    account_id    = "<HARNESS_ACCOUNT_ID>"
+    account_id     = "<HARNESS_ACCOUNT_ID>"
     delegate_token = "<HARNESS_DELEGATE_TOKEN>"
+    region         = "<AWS_REGION>"
    ```
 
 3. Initialize, Plan and Apply Terraform:
