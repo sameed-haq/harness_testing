@@ -23,7 +23,7 @@ This Terraform example provisions an AWS EKS cluster and installs a Harness Kube
     ```bash
     account_id     = "<HARNESS_ACCOUNT_ID>"
     delegate_token = "<HARNESS_DELEGATE_TOKEN>"
-    region         = "<AWS_REGION>"..
+    region         = "<AWS_REGION>"
    ```
 
 3. Initialize, Plan and Apply Terraform:
