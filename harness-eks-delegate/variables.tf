@@ -26,7 +26,7 @@ variable "delegate_namespace" {
 }
 
 variable "manager_endpoint" {
-  description = "Harness Manager endpoint []"
+  description = "Harness Manager endpoint [Please refer to documentation for correct values]"
 }
 
 variable "delegate_image" {
