@@ -26,13 +26,11 @@ variable "delegate_namespace" {
 }
 
 variable "manager_endpoint" {
-  description = "Harness Manager endpoint"
-  default     = "https://app.harness.io"
+  description = "Harness Manager endpoint [Please refer to documentation for correct values]"
 }
 
 variable "delegate_image" {
   description = "Delegate image tag (example: harness/delegate:25.04.85701)"
-  default     = "harness/delegate:25.04.85701"
 }
 
 variable "replicas" {
